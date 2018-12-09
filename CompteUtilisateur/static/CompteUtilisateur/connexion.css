@@ -1,0 +1,47 @@
+
+.mycontainer-fluid{
+    width:100%;
+    margin-right:auto;
+    margin-left:auto;
+}
+
+#myrownavbar{
+  padding-bottom: 100px;
+}
+
+#div_connexion {
+  background-color: #e5e7e9 ;
+  box-shadow: 5px 5px  10px 10px grey;
+  padding: 35px;
+}
+
+#connexion_button ,#mail_button{
+  width: 300px;
+}
+
+#mot_de_passe_ouble{
+    margin-top: 25px;
+}
+
+#connexion_button{
+    margin-top: 10px;
+}
+
+#creation_compte_alerte{
+/*  padding-bottom:  30px;*/
+}
+
+
+#gestion_de_compte{
+  visibility: hidden;
+  }
+
+#div_creation_compte {
+  background-color: #e5e7e9 ;
+  box-shadow: 5px 5px  10px 10px grey;
+  padding: 35px;
+}
+
+#div_erreur .alert{
+/*  padding: 15px;*/
+}
