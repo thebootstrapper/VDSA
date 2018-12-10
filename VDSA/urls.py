@@ -22,5 +22,6 @@ from . import views
 urlpatterns = [
     url(r'^CompteUtilisateur/',include('CompteUtilisateur.urls')),
     url(r'^Geolocalisation/',include('Geolocalisation.urls')),
+    url(r'^Dashboard/',include('Dashboard.urls')),
     url(r'^$',views.index),
 ]
