@@ -20,8 +20,12 @@ from django.conf.urls import url
 from . import views
 
 urlpatterns = [
+    #/CompteUtilisateur/
     url(r'^CompteUtilisateur/',include('CompteUtilisateur.urls')),
+    #/Geolocalisation/
     url(r'^Geolocalisation/',include('Geolocalisation.urls')),
+    #/Dashboard/
     url(r'^Dashboard/',include('Dashboard.urls')),
+    # racine
     url(r'^$',views.index),
 ]
