@@ -28,4 +28,6 @@ urlpatterns = [
     url(r'^Dashboard/',include('Dashboard.urls')),
     # racine
     url(r'^$',views.index),
+
+    url(r'^admin',admin.site.urls),
 ]
