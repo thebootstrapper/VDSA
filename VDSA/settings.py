@@ -31,6 +31,7 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
+    #application du coeur de django
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -39,6 +40,10 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
 
 
+    # package rajoutés
+    'django_extensions',
+
+    #application personnelles
     'CompteUtilisateur',
     'Geolocalisation',
     'Dashboard',
