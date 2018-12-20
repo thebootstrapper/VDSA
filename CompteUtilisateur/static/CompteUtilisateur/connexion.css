@@ -1,3 +1,5 @@
+/* ce fichier est contient les styles appliquées à la page connexion.html */
+
 
 .mycontainer-fluid{
     width:100%;
@@ -5,24 +7,28 @@
     margin-left:auto;
 }
 
+/* style de la bar de  navigation */
 #myrownavbar{
   padding-bottom: 100px;
 }
 
+/* style du formulaire de connexion */
 #div_connexion {
   background-color: #e5e7e9 ;
   box-shadow: 5px 5px  10px 10px grey;
   padding: 35px;
 }
-
+/* style ds bouttons des 2 formulaires */
 #connexion_button ,#mail_button{
   width: 300px;
 }
 
+/* style du texte "mot de passe oublié" */
 #mot_de_passe_ouble{
     margin-top: 25px;
 }
 
+/* style du bouton de connexion du forulaire de connxion */
 #connexion_button{
     margin-top: 10px;
 }
@@ -32,16 +38,14 @@
 }
 
 
-#gestion_de_compte{
-  visibility: hidden;
-  }
-
+/* style du formulaire de creation de compte */
 #div_creation_compte {
   background-color: #e5e7e9 ;
   box-shadow: 5px 5px  10px 10px grey;
   padding: 35px;
 }
 
+/* style du message d'alert */
 #div_erreur .alert{
 /*  padding: 15px;*/
 }

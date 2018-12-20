@@ -1,14 +1,18 @@
+
+
+/* style de la barre de navigation */
 #myrownavbar{
   padding-bottom: 100px;
 }
 
-
+/* style du formaulaire de mot de passe */
 #div_mot_de_passe {
   background-color: #e5e7e9 ;
   box-shadow: 5px 5px  10px 10px grey;
   padding: 35px;
 }
 
+/* style du boutton "valider" */
 #form_button{
   width: 300px;
   margin:30px;
