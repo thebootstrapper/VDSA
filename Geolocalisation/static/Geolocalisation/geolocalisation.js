@@ -1,22 +1,22 @@
 
 var clients = {
         client1: {
-          center: {lat: 41.878, lng: -87.629},
+          center: {lat: 48.878, lng: 0},
           CA: 2714856,
           nom: "mboussa"
         },
         newyork: {
-          center: {lat: 40.714, lng: -74.005},
+          center: {lat: 43.714, lng: 0},
           CA: 9405837,
           nom: "mboussa"
         },
         losangeles: {
-          center: {lat: 34.052, lng: -118.243},
+          center: {lat: 44.052, lng: 5.1}, // lat = y, lng=x
           CA: 5857799,
           nom: "mboussa"
         },
         vancouver: {
-          center: {lat: 49.25, lng: -123.1},
+          center: {lat: 49.25, lng: 0},
           CA: 1502,
           nom: "mboussa"
         }
@@ -25,9 +25,9 @@ var clients = {
       function initMap() {
         // Create the map.
         var map = new google.maps.Map(document.getElementById('map_canvas'), {
-          zoom: 4,
+          zoom: 6,
 
-          center: {lat: 37.090, lng: -95.712},
+          center: {lat: 47.090, lng: 0},
         });
 
         // Construct the circle for each value in citymap.
