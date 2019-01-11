@@ -1,70 +1,70 @@
 
 /*
-<body>
-  <div id="floating-panel">
-    <input id="address" type="textbox" value="Sydney, NSW">
-    <input id="submit" type="button" value="Geocode">
-  </div>
-  <div id="map"></div>
-  <script>
-    function initMap() {
-      var map = new google.maps.Map(document.getElementById('map'), {
-        zoom: 8,
-        center: {lat: -34.397, lng: 150.644}
-      });
-      var geocoder = new google.maps.Geocoder();
-
-      document.getElementById('submit').addEventListener('click', function() {
-        geocodeAddress(geocoder, map);
-      });
-    }
-
-    function geocodeAddress(geocoder, resultsMap) {
-      var address = document.getElementById('address').value;
-      geocoder.geocode({'address': address}, function(results, status) {
-      // how to get a geolocalisation data from a normal adress in "results"
-        if (status === 'OK') {
-          resultsMap.setCenter(results[0].geometry.location);
-          var marker = new google.maps.Marker({
-            map: resultsMap,
-            position: results[0].geometry.location
-          });
-        } else {
-          alert('Geocode was not successful for the following reason: ' + status);
-        }
-      });
-    }
-  </script>
-  <script async defer
-  src="https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY&callback=initMap">
-  </script>
-</body>
-</html>
+Ce json contient pour chaque adrese les données suivantes :
+id: l'identifiant de l'adresse dans la base de donnée
+cp: code postale
+ville: la ville
+chiffre: le choffre d 'affaire ou la marge
 */
-
-
 var clients = {
+
         client1: {
-          center: {lat: 48.878, lng: 0},
-          CA: 2714856,
-          nom: "mboussa"
+            id: 5,
+            cp: 75000,
+            ville: "lyon",
+            chiffre: 400,
         },
         newyork: {
-          center: {lat: 43.714, lng: 0},
-          CA: 9405837,
-          nom: "mboussa"
+            id: 5,
+            cp: 95000,
+            ville: "Cergy",
+            chiffre: 4000,
         },
-        losangeles: {
-          center: {lat: 44.052, lng: 5.1}, // lat = y, lng=x
-          CA: 5857799,
-          nom: "mboussa"
-        },
-        vancouver: {
-          center: {lat: 49.25, lng: 0},
-          CA: 1502,
-          nom: "mboussa"
-        }
       };
+
+
+
+/* cette foinction recherche la latitude et la longitude d'une addresse et l'affiche sur la carte */
+      function geocodeAddress(geocoder, data,map) {
+              for (var client in data) {
+                // si le Chiffre d'affaire ou la marge est un numérique
+                  if ( $.isNumeric(data[client].chiffre) == true){
+
+                      var address = data[client].ville + " "+ data[client].cp  ;
+
+                      // recherche de la latitude et de la longitude
+                      geocoder.geocode({'address': address}, function(results, status) {
+                        console.log(status);
+
+                      // si les coordonnées ont été trouvées
+                        if (status === 'OK') {
+
+                          var mIcon = {
+                               path: google.maps.SymbolPath.CIRCLE,
+                               fillOpacity: 0.4,
+                               fillColor: 'blue',
+                               strokeOpacity: 1,
+                               strokeWeight: 1,
+                               strokeColor: '#333',
+                               scale:  50// trouver une formaule en fonction du CA pour qu'il s''affiche dans le cercle .ex:(Math.sqrt(clients[client].CA) / 100)
+                             };
+
+                             var gMarker = new google.maps.Marker({
+                               map: map,
+                               position: results[0].geometry.location,
+                               title: address,
+                               icon: mIcon,
+                               label: {color: 'white', fontSize: '12px', fontWeight: '600',
+                               text: data[client].chiffre+""}
+                             });
+                        }
+                      });
+
+                    }
+              }
+          }
+
+
 
       function initMap() {
         // Create the map.
@@ -74,46 +74,8 @@ var clients = {
           center: {lat: 47.090, lng: 0},
         });
 
-        // Construct the circle for each value in citymap.
-        // Note: We scale the area of the circle based on the population.
-        for (var client in clients) {
 
-          var mIcon = {
-               path: google.maps.SymbolPath.CIRCLE,
-               fillOpacity: 0.4,
-               fillColor: 'blue',
-               strokeOpacity: 1,
-               strokeWeight: 1,
-               strokeColor: '#333',
-               scale:  50// trouver une formaule en fonction du CA pour qu'il s''affiche dans le cercle .ex:(Math.sqrt(clients[client].CA) / 100)
-             };
+        var geocoder = new google.maps.Geocoder();
+        geocodeAddress(geocoder, clients,map)
 
-             var gMarker = new google.maps.Marker({
-               map: map,
-               position: clients[client].center,
-               title: "Client: "+clients[client].nom,
-               icon: mIcon,
-               label: {color: 'white', fontSize: '12px', fontWeight: '600',
-                 text: clients[client].CA+""}
-             });
-  /*
-          // Add the circle for this city to the map.
-          var cityCircle = new google.maps.Circle({
-            strokeColor: '#FF0000',
-            strokeOpacity: 0.8,
-            strokeWeight: 2,
-            fillColor: '#FF0000',
-            fillOpacity: 0.35,
-            label: "essaie",
-            map: map,
-            center: citymap[city].center,
-            radius: Math.sqrt(citymap[city].CA) * 100
-          });
-
-          */
-        }
       }
-
-
-
-initMap();
