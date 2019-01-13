@@ -26,7 +26,7 @@ urlpatterns = [
     #/Geolocalisation/
     url(r'^Geolocalisation/',include('Geolocalisation.urls')),
     #/Dashboard/
-    url(r'^Dashboard/',include('Dashboard.urls')),
+    url(r'^dashboard/',include('Dashboard.urls')),
     # racine
     url(r'^$',views.index),
 

@@ -1,0 +1,186 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="fr" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <title>Tableau de bord</title>
+
+    <!-- Jquery -->
+    <script type="text/javascript" src="{% static 'Dashboard/js/jquery-3.3.1.min.js'%}"></script>
+
+    <!-- Bootstrap -->
+    <link rel="stylesheet" type="text/css" href="{% static 'Dashboard/css/bootstrap.min.css'%}"/>
+
+
+    <!-- JS et CSS de la page -->
+    <script type="text/javascript" src="{% static 'Dashboard/js/graph.js' %}"></script>
+    <link rel="stylesheet" type="text/css" href="{% static 'Dashboard/css/dashboard.css' %}">
+
+
+
+  </head>
+
+
+  <body>
+    <!-- NAV BAR-->
+    <nav class="navbar navbar-dark fixed-top bg-dark flex-md-nowrap p-0 shadow">
+        <a class="navbar-brand col-sm-3 col-md-2 mr-0" href="#"> VDSA</a>
+
+      <ul class="navbar-nav px-3">
+        <li class="nav-item text-nowrap">
+
+        </li>
+      </ul>
+    </nav>
+<!--FIN DE LA NAV BAR-->
+
+      <!--CONTENEUR -->
+
+    <div class="container-fluid">
+      <div class="row">
+
+          <!-- SIDE BAR-->
+        <nav class="col-xs-2 d-none d-md-block bg-light sidebar">
+            <br>
+          <div class="sidebar-sticky">
+              <ul class="nav flex-column">
+                  <p>Visible si admin</p>
+                  <FORM>
+                    <SELECT class="nom" size="1">
+                        <OPTION>Représentant</OPTION>
+                        <OPTION>mardi</OPTION>
+                        <OPTION>mercredi</OPTION>
+                        <OPTION>jeudi</OPTION>
+                        <OPTION>vendredi</OPTION>
+                    </SELECT>
+                  </FORM>
+                  <br>
+                  <FORM>
+                    <SELECT class="nom" size="1">
+                        <OPTION>Magasin</OPTION>
+                        <OPTION>mardi</OPTION>
+                        <OPTION>mercredi</OPTION>
+                        <OPTION>jeudi</OPTION>
+                        <OPTION>vendredi</OPTION>
+                    </SELECT>
+                    </FORM>
+                <br>
+            </ul>
+              <ul class="nav flex-column">
+            <ul class="identifiant">
+                <p>NOM<p>
+                <p>PRENOM<p>
+                 <a href="">DECONNEXION</a>
+                <br>
+            </ul>
+              </ul>
+          </div>
+        </nav>
+          <!--FIN SIDE BAR-->
+
+        <main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-4"><div class="chartjs-size-monitor" style="position: absolute; left: 0px; top: 0px; right: 0px; bottom: 0px; overflow: hidden; pointer-events: none; visibility: hidden; z-index: -1;"><div class="chartjs-size-monitor-expand" style="position:absolute;left:0;top:0;right:0;bottom:0;overflow:hidden;pointer-events:none;visibility:hidden;z-index:-1;"><div style="position:absolute;width:1000000px;height:1000000px;left:0;top:0"></div></div><div class="chartjs-size-monitor-shrink" style="position:absolute;left:0;top:0;right:0;bottom:0;overflow:hidden;pointer-events:none;visibility:hidden;z-index:-1;"><div style="position:absolute;width:200%;height:200%;left:0; top:0"></div></div></div>
+            <br>
+            <!-- LISTE DEROULANTE STATES-->
+
+          <div class="row">
+              <div class="col-sm-6 table-responsive">
+
+    <button id="id_sql_clt_search"> chercher client</button>
+    <button id="id_sql_list_com"> liste commercants</button>
+    <button id="id_sql_list_mag"> liste magasin</button>
+    <button id="id_sql_list_fam"> liste famille</button>
+    <button id="id_sql_list_sous_fam"> liste sous famille</button>
+    <button id="id_sql_get_table_data"> donnees graph</button>
+    <button id="id_sql_mouse_over"> souris sur courbe</button>
+    <button id="id_sql_get_geoloc_data"> donnees geoloc</button>
+
+    <FORM>
+    <SELECT class="categorie" size="1">
+        <OPTION>States Global Client</OPTION>
+        <OPTION>mardi</OPTION>
+        <OPTION>mercredi</OPTION>
+        <OPTION>jeudi</OPTION>
+        <OPTION>vendredi</OPTION>
+    </SELECT>
+    </FORM>
+              </div>
+              <div class="col-lg-6 table-responsive">sss</div>
+          </div>
+    <br>
+<!-- FIN LIST EDEROULANTE STATES-->
+<div>
+
+    <!--BOUTONS CHIFFRES AFFAIRES ET MARGES-->
+<button type="button" class="button button1">Chiffres d'affaires</button>
+    <button type="button" class="button button2">Marge</button>
+            </div>
+    <!--FIN BOUTOONS CHIFFRES AFFAIRES ET MARGES-->
+
+            <br>
+        <!--BARRE DE RECHERCHE-->
+            <div class="row">
+                <div class="col-sm-6 table-responsive"><div class="form-group">
+        <input type="text" class="form-control" placeholder="Rechercher un numéro de compte client">
+   <br>
+<button type="submit" class="btn btn-default">Rechercher</button>
+     </div></div>
+            </div>
+
+        <br>
+        <!-- Fin BARRE DE RECHERCHE-->
+            <div class="row">
+                <section class="col-sm-6 table-responsive">
+
+          <table class="table table-bordered table-striped table-condensed">
+                <FORM>
+                <SELECT class="famille" size="1">
+                    <OPTION>Famille (toutes par défauts)</OPTION>
+                    <OPTION>mardi</OPTION>
+                    <OPTION>mercredi</OPTION>
+                    <OPTION>jeudi</OPTION>
+                    <OPTION>vendredi</OPTION>
+                </SELECT>
+                </FORM>
+          </table>
+        </section>
+        <section class="col-sm-6">
+          <FORM>
+                <SELECT class="sous_famille" size="1">
+                    <OPTION>Sous famille (toutes par défauts)</OPTION>
+                    <OPTION>mardi</OPTION>
+                    <OPTION>mercredi</OPTION>
+                    <OPTION>jeudi</OPTION>
+                    <OPTION>vendredi</OPTION>
+                </SELECT>
+                </FORM>
+        </section>
+            <div class="row-center">
+                <section class="col-sm- table-responsive">5-09-2017</section>
+                <section class="col-sm- table-responsive">5-09-2016</section>
+
+            </div>
+
+            </div>
+          <canvas class="my-4 w-100 chartjs-render-monitor" id="myChart" width="643" height="271" style="display: block; height: 217px; width: 515px;"></canvas>
+
+          <h2>Chiffres clés annuels</h2>
+           <div class="table-responsive">
+               <table class="table table-striped table-sm">
+                   <thead><tr><th>Clients
+                            <p>60.35%</p></th><th>Nouveau clients
+                            <p>60.35%</p></th><th>Chiffre
+                            <p>60.35%</p></th><th>Marge
+                            <p>60.35%</p></th></tr>
+                   </thead></table></div>
+            <br>
+             <h2>Chiffres clés annuels</h2>
+           <div class="table-responsive">
+               <table class="table table-striped table-sm">
+                 <tbody><tr>
+            <td>Chiffre par client <p>60.35%</p></td><td>Marge <p>60.35%</p></td></tr></tbody></table></div>
+        </main>
+      </div>
+    </div>
+
+  </body>
+</html>

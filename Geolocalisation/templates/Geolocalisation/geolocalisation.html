@@ -1,3 +1,163 @@
+
+{% load static %}
+<!DOCTYPE html>
+<html lang="fr" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+  	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+  	<title>géolocalisartion</title>
+
+    <!-- Jquery -->
+    <script type="text/javascript" src="{% static 'Dashboard/js/jquery-3.3.1.min.js'%}"></script>
+
+    <!-- Bootstrap -->
+    <link rel="stylesheet" type="text/css" href="{% static 'Dashboard/css/bootstrap.min.css'%}"/>
+
+
+    <!-- JS et CSS de la page -->
+  <!--  <script type="text/javascript" src="{% static 'Dashboard/js/graph.js' %}"></script> -->
+    <link rel="stylesheet" type="text/css" href="{% static 'Dashboard/css/dashboard.css' %}">
+
+    <link rel="stylesheet" href="{% static 'Geolocalisation/css/geolocalisation.css' %}">
+    <script type="text/javascript" src="{% static 'Geolocalisation/js/map.js' %}"></script>
+    <script async defer
+      src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCMMzGPd854s5LS7-N9OvEOUSfUwwyX180&callback=initMap">
+      </script>
+
+
+  </head>
+
+
+  <body>
+    <!-- NAV BAR-->
+    <nav class="navbar navbar-dark fixed-top bg-dark flex-md-nowrap p-0 shadow">
+        <a class="navbar-brand col-sm-3 col-md-2 mr-0" href="#"> VDSA</a>
+
+      <ul class="navbar-nav px-3">
+        <li class="nav-item text-nowrap">
+
+        </li>
+      </ul>
+    </nav>
+<!--FIN DE LA NAV BAR-->
+
+      <!--ccc container pas fermé -->
+      <!--CONTENEUR -->
+
+    <div class="container-fluid">
+      <!--ccc row pas fermé -->
+      <div class="row">
+
+          <!-- SIDE BAR-->
+        <nav class="col-xs-2 d-none d-md-block bg-light sidebar">
+            <br>
+          <div class="sidebar-sticky">
+              <ul class="nav flex-column">
+                  <p>Visible si admin</p>
+                  <FORM>
+                    <SELECT class="representant" size="1">
+                        <OPTION>Représentant</OPTION>
+                        <OPTION>mardi</OPTION>
+                        <OPTION>mercredi</OPTION>
+                        <OPTION>jeudi</OPTION>
+                        <OPTION>vendredi</OPTION>
+                    </SELECT>
+                  </FORM>
+                  <br>
+                  <FORM>
+                    <SELECT class="magasin" size="1">
+                        <OPTION>Magasin</OPTION>
+                        <OPTION>mardi</OPTION>
+                        <OPTION>mercredi</OPTION>
+                        <OPTION>jeudi</OPTION>
+                        <OPTION>vendredi</OPTION>
+                    </SELECT>
+                    </FORM>
+                <br>
+            </ul>
+              <ul class="nav flex-column">
+            <ul class="identifiant">
+                <p>NOM<p>
+                <p>PRENOM<p>
+                 <a href="">DECONNEXION</a>
+                <br>
+            </ul>
+              </ul>
+          </div>
+        </nav>
+          <!--FIN SIDE BAR-->
+
+        <main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-4">
+          <div class="chartjs-size-monitor" style="position: absolute; left: 0px; top: 0px; right: 0px; bottom: 0px; overflow: hidden; pointer-events: none; visibility: hidden; z-index: -1;">
+              <div class="chartjs-size-monitor-expand" style="position:absolute;left:0;top:0;right:0;bottom:0;overflow:hidden;pointer-events:none;visibility:hidden;z-index:-1;">
+                  <div style="position:absolute;width:1000000px;height:1000000px;left:0;top:0">
+                  </div>
+              </div>
+              <div class="chartjs-size-monitor-shrink" style="position:absolute;left:0;top:0;right:0;bottom:0;overflow:hidden;pointer-events:none;visibility:hidden;z-index:-1;">
+                  <div style="position:absolute;width:200%;height:200%;left:0; top:0">
+                  </div>
+              </div>
+        </div>
+            <br>
+            <!-- LISTE DEROULANTE STATES-->
+
+          <div class="row">
+              <div class="col-sm-6 table-responsive">
+
+    <button id="id_sql_get_geoloc_data"> donnees geoloc</button>
+
+              </div>
+          </div>
+    <br>
+
+<!-- FIN LIST EDEROULANTE STATES-->
+    <div>
+            <!--BOUTONS CHIFFRES AFFAIRES ET MARGES-->
+        <button type="button" class="button button1">Chiffres d'affaires</button>
+        <button type="button" class="button button2">Marge</button>
+    </div>
+    <!--FIN BOUTOONS CHIFFRES AFFAIRES ET MARGES-->
+
+
+            <div class="row">
+                <section class="col-sm-6 table-responsive">
+                  <table class="table table-bordered table-striped table-condensed">
+                      <FORM>
+                        <SELECT  class="famille" size="1">
+                            <OPTION>Famille (toutes par défauts)</OPTION>
+                            <OPTION>mardi</OPTION>
+                            <OPTION>mercredi</OPTION>
+                            <OPTION>jeudi</OPTION>
+                            <OPTION>vendredi</OPTION>
+                        </SELECT>
+                      </FORM>
+                  </table>
+                </section>
+
+                <section class="col-sm-6">
+                  <FORM>
+                      <SELECT class="sous_famille" size="1">
+                          <OPTION>Sous famille (toutes par défauts)</OPTION>
+                          <OPTION>mardi</OPTION>
+                          <OPTION>mercredi</OPTION>
+                          <OPTION>jeudi</OPTION>
+                          <OPTION>vendredi</OPTION>
+                      </SELECT>
+                  </FORM>
+                </section>
+
+            </div>
+
+          <div class="map_canvas_wrapper"><div id="map_canvas"></div></div>
+
+
+
+
+  </body>
+</html>
+
+<!--
 <!DOCTYPE html>
 <html>
 <head>
@@ -6,15 +166,15 @@
 
 	<title>Page MAP</title>
 
-  <!-- My CSS -->
+  <!-- My CSS --
 	{% load staticfiles %}
-<link rel="stylesheet" href="{% static 'Geolocalisation/geolocalisation.css' %}">
+<link rel="stylesheet" href="{% static 'Geolocalisation/css/geolocalisation.css' %}">
 
-	  <!-- Bootstrap CSS -->
+	  <!-- Bootstrap CSS --
 
 <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
 
-<!-- chargemment des fichiers CSS et Javascript de bootstrap4 qui sont en ligne -->
+<!-- chargemment des fichiers CSS et Javascript de bootstrap4 qui sont en ligne --
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
 <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
@@ -24,16 +184,16 @@
 </head>
 <body>
 
-
   <h3> Géolocalisation des chiffes d'affaires : <br /></h3>
 <div class="map_canvas_wrapper"><div id="map_canvas"></div></div>
 
 
 
 
-<!-- My JS -->
+<!-- My JS --
 	{% load static %}
-<script type="text/javascript" src="{% static 'Geolocalisation/geolocalisation.js' %}"></script>
+<script type="text/javascript" src="{% static 'Geolocalisation/js/map.js' %}"></script>
+<script type="text/javascript" src="{% static 'Geolocalisation/js/getData.js' %}"></script>
 
   <script async defer
     src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCMMzGPd854s5LS7-N9OvEOUSfUwwyX180&callback=initMap">
@@ -41,3 +201,4 @@
 
 </body>
 </html>
+-->
