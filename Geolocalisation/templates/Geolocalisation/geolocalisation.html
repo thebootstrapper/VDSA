@@ -57,21 +57,19 @@
                   <p>Visible si admin</p>
                   <FORM>
                     <SELECT class="representant" size="1">
-                        <OPTION>Représentant</OPTION>
-                        <OPTION>mardi</OPTION>
-                        <OPTION>mercredi</OPTION>
-                        <OPTION>jeudi</OPTION>
-                        <OPTION>vendredi</OPTION>
+                        <OPTION value="null"> Tous les représentant</OPTION>
+                        {% for id,nom, prenom in representants %}
+                          <OPTION value="{{id}}"> {{nom}} {{prenom }}</OPTION>
+                        {% endfor %}
                     </SELECT>
                   </FORM>
                   <br>
                   <FORM>
                     <SELECT class="magasin" size="1">
-                        <OPTION>Magasin</OPTION>
-                        <OPTION>mardi</OPTION>
-                        <OPTION>mercredi</OPTION>
-                        <OPTION>jeudi</OPTION>
-                        <OPTION>vendredi</OPTION>
+                        <OPTION value="null"> Tous les magasin</OPTION>
+                        {% for id,nom in magasins %}
+                          <OPTION value="{{id}}"> {{nom}} </OPTION>
+                        {% endfor %}
                     </SELECT>
                     </FORM>
                 <br>
@@ -102,15 +100,6 @@
             <br>
             <!-- LISTE DEROULANTE STATES-->
 
-          <div class="row">
-              <div class="col-sm-6 table-responsive">
-
-    <button id="id_sql_get_geoloc_data"> donnees geoloc</button>
-
-              </div>
-          </div>
-    <br>
-
 <!-- FIN LIST EDEROULANTE STATES-->
     <div>
             <!--BOUTONS CHIFFRES AFFAIRES ET MARGES-->
@@ -123,13 +112,12 @@
             <div class="row">
                 <section class="col-sm-6 table-responsive">
                   <table class="table table-bordered table-striped table-condensed">
-                      <FORM>
+                      <FORM id ="famille_form">
                         <SELECT  class="famille" size="1">
-                            <OPTION>Famille (toutes par défauts)</OPTION>
-                            <OPTION>mardi</OPTION>
-                            <OPTION>mercredi</OPTION>
-                            <OPTION>jeudi</OPTION>
-                            <OPTION>vendredi</OPTION>
+                            <OPTION value="null" selected="selected" > Toutes les famille </OPTION>
+                            {% for id,nom in familles %}
+                              <OPTION value="{{id}}"> {{nom}} </OPTION>
+                            {% endfor %}
                         </SELECT>
                       </FORM>
                   </table>
@@ -139,10 +127,7 @@
                   <FORM>
                       <SELECT class="sous_famille" size="1">
                           <OPTION>Sous famille (toutes par défauts)</OPTION>
-                          <OPTION>mardi</OPTION>
-                          <OPTION>mercredi</OPTION>
-                          <OPTION>jeudi</OPTION>
-                          <OPTION>vendredi</OPTION>
+
                       </SELECT>
                   </FORM>
                 </section>

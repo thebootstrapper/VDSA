@@ -65,12 +65,11 @@ chiffre: le choffre d 'affaire ou la marge
       function geocodeAddress(geocoder, data,map) {
 
               var echelle = getScale(data)
-              console.log(echelle)
-
+          //    console.log(echelle)
+console.log(data)
               for (var client in data) {
                 // si le Chiffre d'affaire ou la marge est un numérique
                   if ( $.isNumeric(data[client].value) == true){
-
 
                       var address = data[client].ville + " "+ data[client].cp  ;
                       // recherche de la latitude et de la longitude
@@ -80,6 +79,8 @@ chiffre: le choffre d 'affaire ou la marge
                   var couleur = getCouleur(data[client].value)
                       // si les coordonnées ont été trouvées
                         if (status === 'OK') {
+
+                            console.log(data[client])
                           var mIcon = {
                                path: google.maps.SymbolPath.CIRCLE,
                                fillOpacity: 0.4,
@@ -97,7 +98,7 @@ chiffre: le choffre d 'affaire ou la marge
                                title: address,
                                icon: mIcon,
                                label: {color: 'white', fontSize: '12px', fontWeight: '600',
-                               text: data[client].value+""}
+                               text: data[client].value+" "}
                              });
                         }
                         else{
@@ -122,38 +123,171 @@ chiffre: le choffre d 'affaire ou la marge
         var id_magasin = null;
         var id_sousfamille = null;
         var id_famille = null;
-
+/*
           $(document).ready(function() {
 
 
             $(".chiffre").change(function() {
-              alert('f')
+
               bool_cal = $(this).value;
+              id_commercial= $(".representant").value;
+              id_magasin =   $(".magasin").value;
+              id_sousfamille = $(".sous_famille").value;
+              id_famille = $(".falille").value;
+
+              $.ajax({
+                type:"POST",
+                url:"/dashboard/sql_get_geoloc_data/",
+                data: {
+                  //'filter[]': [null,  id_commercial, id_magasin, id_sousfamille, id_famille ]
+                  // bool_cal : bool_cal
+                  'filter[]': [null, null, null, null, null],
+                  'bool_ca': true
+                },
+                success: function(json_data){
+                  var clients = JSON.parse(json_data);
+
+
+                  // Create the map.
+                  var map = new google.maps.Map(document.getElementById('map_canvas'), {
+                    zoom: 6,
+
+                    center: {lat: 47.090, lng: 0},
+                  });
+
+                  var geocoder = new google.maps.Geocoder();
+                  geocodeAddress(geocoder, clients,map)
+                }
+              });
+
             });
 
           $(".representant").change(function() {
-            alert('f')
-            id_commercial = $(this).value;
+            id_commercial = $(this).value;bool_cal = $(this).value;
+            id_commercial= $(".representant").value;
+            id_magasin =   $(".magasin").value;
+            id_sousfamille = $(".sous_famille").value;
+            id_famille = $(".falille").value;
+
+            $.ajax({
+              type:"POST",
+              url:"/dashboard/sql_get_geoloc_data/",
+              data: {
+                //'filter[]': [null,  id_commercial, id_magasin, id_sousfamille, id_famille ]
+                // bool_cal : bool_cal
+                'filter[]': [null, null, null, null, null],
+                'bool_ca': true
+              },
+              success: function(json_data){
+                var clients = JSON.parse(json_data);
+
+
+                // Create the map.
+                var map = new google.maps.Map(document.getElementById('map_canvas'), {
+                  zoom: 6,
+
+                  center: {lat: 47.090, lng: 0},
+                });
+
+                var geocoder = new google.maps.Geocoder();
+                geocodeAddress(geocoder, clients,map)
+              }
+            });
+
           });
 
           $(".magasin").change(function() {
-            alert('f')
-            id_magasin = $(this).value;
+            id_magasin = $(this).value;bool_cal = $(this).value;
+            id_commercial= $(".representant").value;
+            id_magasin =   $(".magasin").value;
+            id_sousfamille = $(".sous_famille").value;
+            id_famille = $(".falille").value;
+
+            $.ajax({
+              type:"POST",
+              url:"/dashboard/sql_get_geoloc_data/",
+              data: {
+                //'filter[]': [null,  id_commercial, id_magasin, id_sousfamille, id_famille ]
+                // bool_cal : bool_cal
+                'filter[]': [null, null, null, null, null],
+                'bool_ca': true
+              },
+              success: function(json_data){
+                var clients = JSON.parse(json_data);
+
+
+                // Create the map.
+                var map = new google.maps.Map(document.getElementById('map_canvas'), {
+                  zoom: 6,
+
+                  center: {lat: 47.090, lng: 0},
+                });
+
+                var geocoder = new google.maps.Geocoder();
+                geocodeAddress(geocoder, clients,map)
+              }
             });
 
-          $(".sous_famille").change(function() {
-            alert('f')
-            id_sousfamille = $(this).value;
             });
 
-
+*/
           $(".famille").change(function() {
-            alert('f')
-            id_famille = $(this).value;
+            id_famille = document.forms["famille_form"].elements[0].value;
+console.log(id_famille)
+//charger les sous familles
+                $.ajax({
+                  type:"POST",
+                  url:"/Geolocalisation/sql_list_sous_fam/",
+                  data: {
+                    'famille': id_famille
+                  },
+                  success: function(json_data){
+                    var sous_familles = JSON.parse(json_data);
+                    // rajouter les sous familles en jquery
+                    console.log(sous_familles)
+
+                  }
+                });
+
+            });
+
+/*
+          $(".sous_famille").change(function() {
+            var id_famille = $(".famille").value;bool_cal = $(this).value;
+            id_commercial= $(".representant").value;
+            id_magasin =   $(".magasin").value;
+            id_sousfamille = $(".sous_famille").value;
+            id_famille = $(".falille").value;
+
+            $.ajax({
+              type:"POST",
+              url:"/dashboard/sql_get_geoloc_data/",
+              data: {
+                //'filter[]': [null,  id_commercial, id_magasin, id_sousfamille, id_famille ]
+                // bool_cal : bool_cal
+                'filter[]': [null, null, null, null, null],
+                'bool_ca': true
+              },
+              success: function(json_data){
+                var clients = JSON.parse(json_data);
+
+
+                // Create the map.
+                var map = new google.maps.Map(document.getElementById('map_canvas'), {
+                  zoom: 6,
+
+                  center: {lat: 47.090, lng: 0},
+                });
+
+                var geocoder = new google.maps.Geocoder();
+                geocodeAddress(geocoder, clients,map)
+              }
+            });
+
             });
 
           });
-
+*/
         $.ajax({
           type:"POST",
           url:"/dashboard/sql_get_geoloc_data/",
