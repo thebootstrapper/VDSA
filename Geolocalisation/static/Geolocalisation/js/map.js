@@ -12,7 +12,7 @@ function getCouleur(value){
 
 
 function min(data){
-  var min = Number.MIN_SAFE_INTEGER
+  var min = Number.MAX_SAFE_INTEGER
 
     for ( client in data){
       if ( $.isNumeric(data[client].value) == true &&  data[client].value <min)
@@ -23,29 +23,28 @@ function min(data){
 }
 
 function max(data){
-  var max = Number.MAX_SAFE_INTEGER;
+  var max = Number.MIN_SAFE_INTEGER;
 
   for ( client in data){
     if ( $.isNumeric(data[client].value) == true &&  data[client].value  > max)
-        min = data[client].value;
+        max = data[client].value;
   }
 
   return max;
 }
 
 function getScale(data){
-   var echelle = new Array();
-  var min_echelle = 10;
-  var max_echelle = 50;
+
+  var echelle = new Array();
+  var min_echelle = 20;
+  var max_echelle = 70;
   var client_echelle;
 
   var min_value = min(data);
   var max_value = max(data);
 
-
-
   for ( client in data){
-    echelle[client]= (data[client].value - min_value )*(max_echelle -  min_echelle)/(max_value - min_value);
+    echelle[client]= ((data[client].value - min_value )/(max_value - min_value))*(max_echelle -  min_echelle) + min_echelle;
   }
   return echelle;
 }
@@ -60,13 +59,60 @@ chiffre: le choffre d 'affaire ou la marge
 */
 
 
+function updateMap(){
+
+
+    var bool_cal=false;
+    var id_commercial= null;
+    var id_magasin = null;
+    var id_sousfamille = null;
+    var id_famille = null;
+
+/*
+initialiser avec les véritables valeurs
+    id_famille = document.forms["famille_form"].elements[0].value;
+
+  var id_famille = $(".famille").value;
+  bool_cal = $(this).value;
+  id_commercial= $(".representant").value;
+  id_magasin =   $(".magasin").value;
+  id_sousfamille = $(".sous_famille").value;
+  id_famille = $(".falille").value;
+*/
+
+  $.ajax({
+    type:"POST",
+    url:"/dashboard/sql_get_geoloc_data/",
+    data: {
+      //'filter[]': [null,  id_commercial, id_magasin, id_sousfamille, id_famille ]
+      // bool_cal : bool_cal
+      'filter[]': [null, null, null, null, null],
+      'bool_ca': true
+    },
+    success: function(json_data){
+      var clients = JSON.parse(json_data);
+
+
+      // Create the map.
+      var map = new google.maps.Map(document.getElementById('map_canvas'), {
+        zoom: 6,
+
+        center: {lat: 47.090, lng: 0},
+      });
+
+      var geocoder = new google.maps.Geocoder();
+      geocodeAddress(geocoder, clients,map)
+    }
+
+  })
+
+  }
 
 /* cette foinction recherche la latitude et la longitude d'une addresse et l'affiche sur la carte */
       function geocodeAddress(geocoder, data,map) {
 
               var echelle = getScale(data)
-          //    console.log(echelle)
-console.log(data)
+              console.log(echelle)
               for (var client in data) {
                 // si le Chiffre d'affaire ou la marge est un numérique
                   if ( $.isNumeric(data[client].value) == true){
@@ -89,9 +135,9 @@ console.log(data)
                                strokeWeight: 1,
                                strokeColor: '#333',
                                // echelle[client]
-                               scale:  65// trouver une formaule en fonction du CA pour qu'il s''affiche dans le cercle .ex:(Math.sqrt(clients[client].CA) / 100)
+                               scale:   echelle[client]// trouver une formaule en fonction du CA pour qu'il s''affiche dans le cercle .ex:(Math.sqrt(clients[client].CA) / 100)
                              };
-
+                              //console.log("sscale="+echelle[client])
                              var gMarker = new google.maps.Marker({
                                map: map,
                                position: results[0].geometry.location,
@@ -123,179 +169,63 @@ console.log(data)
         var id_magasin = null;
         var id_sousfamille = null;
         var id_famille = null;
-/*
+
           $(document).ready(function() {
 
-
-            $(".chiffre").change(function() {
-
-              bool_cal = $(this).value;
-              id_commercial= $(".representant").value;
-              id_magasin =   $(".magasin").value;
-              id_sousfamille = $(".sous_famille").value;
-              id_famille = $(".falille").value;
-
-              $.ajax({
-                type:"POST",
-                url:"/dashboard/sql_get_geoloc_data/",
-                data: {
-                  //'filter[]': [null,  id_commercial, id_magasin, id_sousfamille, id_famille ]
-                  // bool_cal : bool_cal
-                  'filter[]': [null, null, null, null, null],
-                  'bool_ca': true
-                },
-                success: function(json_data){
-                  var clients = JSON.parse(json_data);
-
-
-                  // Create the map.
-                  var map = new google.maps.Map(document.getElementById('map_canvas'), {
-                    zoom: 6,
-
-                    center: {lat: 47.090, lng: 0},
-                  });
-
-                  var geocoder = new google.maps.Geocoder();
-                  geocodeAddress(geocoder, clients,map)
-                }
+              $(".chiffre").change(function() {
+                  updateMap();
               });
 
-            });
+              $(".representant").change(function() {
+                  updateMap();
+              });
 
-          $(".representant").change(function() {
-            id_commercial = $(this).value;bool_cal = $(this).value;
-            id_commercial= $(".representant").value;
-            id_magasin =   $(".magasin").value;
-            id_sousfamille = $(".sous_famille").value;
-            id_famille = $(".falille").value;
-
-            $.ajax({
-              type:"POST",
-              url:"/dashboard/sql_get_geoloc_data/",
-              data: {
-                //'filter[]': [null,  id_commercial, id_magasin, id_sousfamille, id_famille ]
-                // bool_cal : bool_cal
-                'filter[]': [null, null, null, null, null],
-                'bool_ca': true
-              },
-              success: function(json_data){
-                var clients = JSON.parse(json_data);
-
-
-                // Create the map.
-                var map = new google.maps.Map(document.getElementById('map_canvas'), {
-                  zoom: 6,
-
-                  center: {lat: 47.090, lng: 0},
+              $(".magasin").change(function() {
+                  updateMap();
                 });
 
-                var geocoder = new google.maps.Geocoder();
-                geocodeAddress(geocoder, clients,map)
-              }
-            });
+              $(".famille").change(function() {
+                id_famille = document.forms["famille_form"].elements[0].value;
+              //charger les sous familles
+                    $.ajax({
+                      type:"POST",
+                      url:"/Geolocalisation/sql_list_sous_fam/",
+                      data: {
+                        'famille': id_famille
+                      },
+                      success: function(json_data){
+                        var sous_familles = JSON.parse(json_data);
+                        // rajouter les sous familles en jquery
+                        console.log(sous_familles)
+                        var select = $(" .sous_famille");
+                        var html = '<OPTION>Sous famille (toutes par défauts)</OPTION>';
+
+                        for( var sous_f in sous_familles){
+                          html +='<OPTION value="' + sous_familles[sous_f][0]+'"> '
+                                  +  sous_familles[sous_f][1] + '</OPTION>'
+                        }
+                        select.children().remove();
+                        select.append(html);
+
+                      }
+                    });
+
+                   updateMap();
+                });
+
+
+              $(".sous_famille").change(function() {
+                  updateMap();
+                });
 
           });
 
-          $(".magasin").change(function() {
-            id_magasin = $(this).value;bool_cal = $(this).value;
-            id_commercial= $(".representant").value;
-            id_magasin =   $(".magasin").value;
-            id_sousfamille = $(".sous_famille").value;
-            id_famille = $(".falille").value;
-
-            $.ajax({
-              type:"POST",
-              url:"/dashboard/sql_get_geoloc_data/",
-              data: {
-                //'filter[]': [null,  id_commercial, id_magasin, id_sousfamille, id_famille ]
-                // bool_cal : bool_cal
-                'filter[]': [null, null, null, null, null],
-                'bool_ca': true
-              },
-              success: function(json_data){
-                var clients = JSON.parse(json_data);
-
-
-                // Create the map.
-                var map = new google.maps.Map(document.getElementById('map_canvas'), {
-                  zoom: 6,
-
-                  center: {lat: 47.090, lng: 0},
-                });
-
-                var geocoder = new google.maps.Geocoder();
-                geocodeAddress(geocoder, clients,map)
-              }
-            });
-
-            });
-
-*/
-          $(".famille").change(function() {
-            id_famille = document.forms["famille_form"].elements[0].value;
-console.log(id_famille)
-//charger les sous familles
-                $.ajax({
-                  type:"POST",
-                  url:"/Geolocalisation/sql_list_sous_fam/",
-                  data: {
-                    'famille': id_famille
-                  },
-                  success: function(json_data){
-                    var sous_familles = JSON.parse(json_data);
-                    // rajouter les sous familles en jquery
-                    console.log(sous_familles)
-
-                  }
-                });
-
-            });
-
-/*
-          $(".sous_famille").change(function() {
-            var id_famille = $(".famille").value;bool_cal = $(this).value;
-            id_commercial= $(".representant").value;
-            id_magasin =   $(".magasin").value;
-            id_sousfamille = $(".sous_famille").value;
-            id_famille = $(".falille").value;
-
-            $.ajax({
-              type:"POST",
-              url:"/dashboard/sql_get_geoloc_data/",
-              data: {
-                //'filter[]': [null,  id_commercial, id_magasin, id_sousfamille, id_famille ]
-                // bool_cal : bool_cal
-                'filter[]': [null, null, null, null, null],
-                'bool_ca': true
-              },
-              success: function(json_data){
-                var clients = JSON.parse(json_data);
-
-
-                // Create the map.
-                var map = new google.maps.Map(document.getElementById('map_canvas'), {
-                  zoom: 6,
-
-                  center: {lat: 47.090, lng: 0},
-                });
-
-                var geocoder = new google.maps.Geocoder();
-                geocodeAddress(geocoder, clients,map)
-              }
-            });
-
-            });
-
-          });
-*/
         $.ajax({
           type:"POST",
           url:"/dashboard/sql_get_geoloc_data/",
           data: {
-            //'filter[]': [null,  id_commercial, id_magasin, id_sousfamille, id_famille ]
-            // bool_cal : bool_cal
-            'filter[]': [null, null, null, null, null],
-            'bool_ca': true
+            'filter[]': [null, id_commercial, id_magasin, id_sousfamille, id_famille],
+            'bool_ca': bool_cal
           },
           success: function(json_data){
             var clients = JSON.parse(json_data);

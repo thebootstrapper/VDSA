@@ -25,6 +25,7 @@ def geolocalisation(request):
     { "representants" : representants, "magasins":magasins, "familles" : familles} )
 
 
+
 # ---> n-uplet de couple, l'id et le nom des sous-familles en fonction de l'id famille 'id_fam' dans la requete ajax GET 'request'
 @csrf_exempt
 def sql_list_sous_fam(request):

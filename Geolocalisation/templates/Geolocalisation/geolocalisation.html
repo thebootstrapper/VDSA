@@ -10,6 +10,7 @@
 
     <!-- Jquery -->
     <script type="text/javascript" src="{% static 'Dashboard/js/jquery-3.3.1.min.js'%}"></script>
+    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
 
     <!-- Bootstrap -->
     <link rel="stylesheet" type="text/css" href="{% static 'Dashboard/css/bootstrap.min.css'%}"/>
@@ -17,7 +18,7 @@
 
     <!-- JS et CSS de la page -->
   <!--  <script type="text/javascript" src="{% static 'Dashboard/js/graph.js' %}"></script> -->
-    <link rel="stylesheet" type="text/css" href="{% static 'Dashboard/css/dashboard.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'Dashboard/css/dashboar.css' %}">
 
     <link rel="stylesheet" href="{% static 'Geolocalisation/css/geolocalisation.css' %}">
     <script type="text/javascript" src="{% static 'Geolocalisation/js/map.js' %}"></script>
@@ -64,7 +65,7 @@
                     </SELECT>
                   </FORM>
                   <br>
-                  <FORM>
+                  <FORM id="magasin_form">
                     <SELECT class="magasin" size="1">
                         <OPTION value="null"> Tous les magasin</OPTION>
                         {% for id,nom in magasins %}
@@ -101,15 +102,33 @@
             <!-- LISTE DEROULANTE STATES-->
 
 <!-- FIN LIST EDEROULANTE STATES-->
-    <div>
-            <!--BOUTONS CHIFFRES AFFAIRES ET MARGES-->
-        <button type="button" class="button button1">Chiffres d'affaires</button>
-        <button type="button" class="button button2">Marge</button>
+
+    <!-- BOUTONS CHIFFRES AFFAIRES ET MARGES-->
+    <div class="row justify-content-center " >
+      <div class="col-11 col-xl-12  col-lg-12 col-md-12 col-sm-12 "  id="div_creation_compte">
+        <form name="user_form" id="user_form">
+
+        	<div class="form-group row">
+              <div class="col-sm-12">
+                <div class="row ">
+                  <div class="btn-group btn-group-toggle" data-toggle="buttons">
+                    <label id="commercial_label" class="btn btn-primary active">
+                      <input type="radio" name="options" id="ca" autocomplete="off" checked=""> Chiffres d'affaire
+                    </label>
+                    <label class="btn btn-primary" id="marge">
+                      <input type="radio" name="options" id="directeur" autocomplete="off"> Marge
+                    </label>
+                  </div>
+                </div>
+              </div>
+          </div>
+        </form>
+      </div>
     </div>
     <!--FIN BOUTOONS CHIFFRES AFFAIRES ET MARGES-->
 
 
-            <div class="row">
+            <div class="row justify-content-center ">
                 <section class="col-sm-6 table-responsive">
                   <table class="table table-bordered table-striped table-condensed">
                       <FORM id ="famille_form">
@@ -134,9 +153,25 @@
 
             </div>
 
-          <div class="map_canvas_wrapper"><div id="map_canvas"></div></div>
+          <div class="row">
+            <div class="col-11 col-xl-12  col-lg-12 col-md-12 col-sm-12 " >
+
+                <div id="map_canvas">
+                </div>
+            </div>
+          </div>
 
 
+
+        </div><!-- fin row -->
+      </div><!-- fin container -->
+
+          <!--  chargemment des fichiers CSS et Javascript de bootstrap4 qui sont en ligne
+          à cause d'un certain bug dans leurs fichiers je dois les recharger encore -->
+          <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
+          <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+          <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+          <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
 
 
   </body>
