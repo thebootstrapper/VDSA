@@ -2,7 +2,10 @@
 
 /*
 
-je n ai pas la bonne valeur sur les cercles */
+parametre en entrée: un réel qui correspont au du chiffre d'affaire ( ou marge)
+cette fonction retourne une chaine de caractère: "blue" ou "red", qui correspond à la couleur du cercle sur la carte.
+ Si le chiffre d'affaire est négatif, la couleur retournée est "red",si non c'est "blue".
+*/
 function getCouleur(value){
   if ( value < 0)
     return "red"
@@ -10,7 +13,10 @@ function getCouleur(value){
     return "blue"
 }
 
+/*
 
+cette fonction retourne le minimum des chiffres d'affaire( ou marge).
+*/
 function min(data){
   var min = Number.MAX_SAFE_INTEGER
 
@@ -22,6 +28,9 @@ function min(data){
     return min;
 }
 
+/*
+cette fonction retourne le maximum des chiffres d'affaire( ou marge).
+*/
 function max(data){
   var max = Number.MIN_SAFE_INTEGER;
 
@@ -33,6 +42,17 @@ function max(data){
   return max;
 }
 
+
+/*
+
+parametres en entrés:
+clients: tableaux de listes, tel que chaque liste contient l'identifiant de la localisation, le code  postale, le nom de la ville et le chiffre d'affire ou la marge
+
+retour:
+cette fonction retourne un tableau de réels. Chaque réel correspond au diamettre du cercle qui s'affichera pour chaque chiffre d'affaire(ou marge).
+Nous avons à ce que ce diametre démonde du chiffre d'afffaire (ou des marges) afin que les différences soient facilement visible. Mais sachant que le chiffre d'affaire et les marges sont des nombres très variables, à partir de cette fonction, nous avons réussit à avoir un tableau de diametres à partir d'un tableau de de chiffre d'affaire(ou marge).
+
+*/
 function getScale(data){
 
   var echelle = new Array();
@@ -50,43 +70,53 @@ function getScale(data){
 }
 
 
-/*
-Ce json contient pour chaque adrese les données suivantes :
-id: l'identifiant de l'adresse dans la base de donnée
-cp: code postale
-ville: la ville
-chiffre: le choffre d 'affaire ou la marge
-*/
-
+/* Cette fonction me à jour la map à en fonction du contenu du formulaire */
 
 function updateMap(){
 
 
-    var bool_cal=false;
-    var id_commercial= null;
-    var id_magasin = null;
-    var id_sousfamille = null;
-    var id_famille = null;
+  bool_cal= $("#ca_label").hasClass("active");
+  console.log( "bool_ca: "+bool_cal);
 
-/*
-initialiser avec les véritables valeurs
-    id_famille = document.forms["famille_form"].elements[0].value;
 
-  var id_famille = $(".famille").value;
-  bool_cal = $(this).value;
-  id_commercial= $(".representant").value;
-  id_magasin =   $(".magasin").value;
-  id_sousfamille = $(".sous_famille").value;
-  id_famille = $(".falille").value;
-*/
+  var is_admin=document.forms["sous_famille_form"].elements[1].value
+  console.log(is_admin)
+  if (is_admin == 0){
+        id_commercial=null;
+        id_magasin=null;
+
+  }
+  else{
+
+  id_commercial= document.forms["representant_form"].elements[0].value;
+  if(id_commercial=="null")// car il recupère la valeur du champs en chaine de caractere
+      id_commercial=null;
+
+  id_magasin = document.forms["representant_form"].elements[1].value;
+  if(id_magasin=="null")// car il recupère la valeur du champs en chaine de caractere
+      id_magasin=null;
+  console.log("id_magasin: "+id_magasin);
+
+  }
+  id_famille = document.forms["famille_form"].elements[0].value;
+  if(id_famille=="null")// car il recupère la valeur du champs en chaine de caractere
+      id_famille=null;
+  console.log("id_famille: "+id_famille);
+
+  id_sousfamille = document.forms["sous_famille_form"].elements[0].value;
+  if(id_sousfamille=="null")// car il recupère la valeur du champs en chaine de caractere
+      id_sousfamille=null;
+  console.log("id_sousfamille : "+id_sousfamille);
+
+
 
   $.ajax({
     type:"POST",
     url:"/dashboard/sql_get_geoloc_data/",
     data: {
-      //'filter[]': [null,  id_commercial, id_magasin, id_sousfamille, id_famille ]
-      // bool_cal : bool_cal
-      'filter[]': [null, null, null, null, null],
+      'filter[]': [null,  id_commercial, id_magasin, id_sousfamille, id_famille ],
+      // bool_cal : bool_cal,
+    //  'filter[]': [null, null, null, null, null],
       'bool_ca': true
     },
     success: function(json_data){
@@ -100,33 +130,47 @@ initialiser avec les véritables valeurs
         center: {lat: 47.090, lng: 0},
       });
 
+
+      console.log("liste des clients:")
+      console.log(clients)
+      var echelle = getScale(clients);
       var geocoder = new google.maps.Geocoder();
-      geocodeAddress(geocoder, clients,map)
+
+      for (var client in clients){
+      geocodeAddress(geocoder, clients[client],echelle[client],map);
+      }
     }
 
   })
 
   }
 
-/* cette foinction recherche la latitude et la longitude d'une addresse et l'affiche sur la carte */
-      function geocodeAddress(geocoder, data,map) {
 
-              var echelle = getScale(data)
-              console.log(echelle)
-              for (var client in data) {
+
+
+/* cette foinction recherche la latitude et la longitude d'une addresse et l'affiche sur la carte
+parametre en trées:
+-geocoder: un objet fournis par google map qui permet d'avoir la latitude et la longitude du l'adresse
+-client: une liste d'information sur la localisation d'un client conteneant l'identifiant de la localisation, le code  postale, le nom de la ville et le chiffre d'affire ou la marge.
+- echelle_valeur: qui est le diametre du cercle à afficher sur la catre.
+-map: qui représente la carte
+*/
+
+      function geocodeAddress(geocoder, client,echelle_valeur,map) {
+
                 // si le Chiffre d'affaire ou la marge est un numérique
-                  if ( $.isNumeric(data[client].value) == true){
+              if ( $.isNumeric(client.value) == true){
 
-                      var address = data[client].ville + " "+ data[client].cp  ;
-                      // recherche de la latitude et de la longitude
-                      geocoder.geocode({'address': address}, function(results, status) {
-                  //      console.log(address);
+                  var address = client.ville + " "+ client.cp  ;
+                  // recherche de la latitude et de la longitude du client
+                  geocoder.geocode({'address': address}, function(results, status) {
 
-                  var couleur = getCouleur(data[client].value)
-                      // si les coordonnées ont été trouvées
+                  //couleur du cercle sur la map
+                  var couleur = getCouleur(client.value)
+                      //on affiche les résultats sur la carte que si les coordonnées ont été trouvées
                         if (status === 'OK') {
 
-                            console.log(data[client])
+                            // creation du cercle à afficher
                           var mIcon = {
                                path: google.maps.SymbolPath.CIRCLE,
                                fillOpacity: 0.4,
@@ -134,81 +178,125 @@ initialiser avec les véritables valeurs
                                strokeOpacity: 1,
                                strokeWeight: 1,
                                strokeColor: '#333',
-                               // echelle[client]
-                               scale:   echelle[client]// trouver une formaule en fonction du CA pour qu'il s''affiche dans le cercle .ex:(Math.sqrt(clients[client].CA) / 100)
+                               scale:   echelle_valeur
                              };
-                              //console.log("sscale="+echelle[client])
+
+                              // ajout du cercle dans sur la carte
                              var gMarker = new google.maps.Marker({
                                map: map,
                                position: results[0].geometry.location,
                                title: address,
                                icon: mIcon,
                                label: {color: 'white', fontSize: '12px', fontWeight: '600',
-                               text: data[client].value+" "}
+                               text: client.value+" "}
                              });
                         }
-                        else{
+                        else // si l'adresse n 'est pas retrouvée, on l'affiche dans la console pour débeugé
+                        {
 
-                          var address = data[client].ville + " "+ data[client].cp  ;
+                          var address = client.ville + " "+ client.cp  ;
                           console.log("erreur :"+status + "\n l'addresse introuvable est :"+address)
                         }
-                      });
 
-                    }
-              }
+                      });
+                }
           }
 
 
 
-
+/*
+Cette fonction initialise la carte fau chargement de la page
+*/
 
       function initMap() {
 
-        var bool_cal=false;
+        var bool_cal=true;
         var id_commercial= null;
         var id_magasin = null;
         var id_sousfamille = null;
         var id_famille = null;
 
+        // initialisation des des champs à partir du contenu de formulaire
+          bool_cal= $("#ca_label").hasClass("active");
+          console.log( "bool_ca: "+bool_cal);
+
+
+          var is_admin=document.forms["sous_famille_form"].elements[1].value
+          console.log(is_admin)
+          if (is_admin == 0){
+                id_commercial=null;
+                id_magasin=null;
+
+          }
+          else{
+
+          id_commercial= document.forms["representant_form"].elements[0].value;
+          if(id_commercial=="null")// car il recupère la valeur du champs en chaine de caractere
+              id_commercial=null;
+
+          id_magasin = document.forms["representant_form"].elements[1].value;
+          if(id_magasin=="null")// car il recupère la valeur du champs en chaine de caractere
+              id_magasin=null;
+          console.log("id_magasin: "+id_magasin);
+
+          }
+
+          id_famille = document.forms["famille_form"].elements[0].value;
+          if(id_famille=="null")// car il recupère la valeur du champs en chaine de caractere
+              id_famille=null;
+          console.log("id_famille: "+id_famille);
+
+          id_sousfamille = document.forms["sous_famille_form"].elements[0].value;
+          if(id_sousfamille=="null")// car il recupère la valeur du champs en chaine de caractere
+              id_sousfamille=null;
+          console.log("id_sousfamille : "+id_sousfamille);
+
+
+
           $(document).ready(function() {
 
-              $(".chiffre").change(function() {
-                  updateMap();
-              });
-
+              // exécution de la fonction updateMap() quand on change de représentant
               $(".representant").change(function() {
                   updateMap();
               });
 
+              // exécution de la fonction updateMap() quand on change de magasin
               $(".magasin").change(function() {
                   updateMap();
                 });
 
               $(".famille").change(function() {
-                id_famille = document.forms["famille_form"].elements[0].value;
-              //charger les sous familles
-                    $.ajax({
-                      type:"POST",
-                      url:"/Geolocalisation/sql_list_sous_fam/",
-                      data: {
-                        'famille': id_famille
-                      },
-                      success: function(json_data){
-                        var sous_familles = JSON.parse(json_data);
-                        // rajouter les sous familles en jquery
-                        console.log(sous_familles)
-                        var select = $(" .sous_famille");
-                        var html = '<OPTION>Sous famille (toutes par défauts)</OPTION>';
+                    id_famille = document.forms["famille_form"].elements[0].value;
+                  //charger les sous famille
+                    console.log(id_famille);
 
-                        for( var sous_f in sous_familles){
-                          html +='<OPTION value="' + sous_familles[sous_f][0]+'"> '
-                                  +  sous_familles[sous_f][1] + '</OPTION>'
-                        }
-                        select.children().remove();
-                        select.append(html);
+                  if(id_famille=="null"){
+                    console.log("toutes les familles")
+                  }
+                  else {
+                        $.ajax({
+                          type:"POST",
+                          url:"/dashboard/sql_list_sous_fam/",
+                          data: {
+                            'id_fam': id_famille
+                          },
+                          success: function(json_data){
+                            var sous_familles = JSON.parse(json_data);
+                            // rajouter les sous familles en jquery
+                            console.log("sous famille: "+sous_familles)
+                            var select = $(" .sous_famille");
+                            var html = '<OPTION value="null"> Toutes les sous familles </OPTION>';
 
+                            for( var sous_f in sous_familles){
+                              html +='<OPTION value="' + sous_familles[sous_f][0]+'"> '
+                                      +  sous_familles[sous_f][1] + '</OPTION>'
+                            }
+                            select.children().remove();
+                            select.append(html);
+
+                          }
+                        });
                       }
-                    });
 
                    updateMap();
                 });
@@ -238,8 +326,17 @@ initialiser avec les véritables valeurs
               center: {lat: 47.090, lng: 0},
             });
 
+            var echelle = getScale(clients);
+            console.log("echelle :"+echelle);
+
+
+            console.log("liste des clients:")
+            console.log(clients)
             var geocoder = new google.maps.Geocoder();
-            geocodeAddress(geocoder, clients,map)
+          //  geocodeAddress(geocoder, clients,echelle,map)
+            for (var client in clients){
+            geocodeAddress(geocoder, clients[client],echelle[client],map);
+            }
           }
         });
 

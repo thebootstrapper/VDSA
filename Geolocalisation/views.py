@@ -3,6 +3,7 @@ from __future__ import absolute_import
 from django.shortcuts import render
 from django.http import HttpResponse,JsonResponse
 from django.views.decorators.csrf import csrf_exempt
+from Backoffice.models import Session_utilisateur, Commercial, Magasinvdsa, Admin
 
 import json
 
@@ -21,8 +22,36 @@ def geolocalisation(request):
     familles  = query_view.sql_list_fam();
 
 
-    return render(request,"Geolocalisation/geolocalisation.html",
-    { "representants" : representants, "magasins":magasins, "familles" : familles} )
+    email_s = Session_utilisateur.objects.all().last().email_s
+    statut = Session_utilisateur.objects.all().last().statut_s
+
+    if statut == "commercial":
+        id = Commercial.objects.get(email = email_s).id
+        nom = Commercial.objects.get(email = email_s).nom
+        prenom = Commercial.objects.get(email = email_s).prenom
+    elif statut == "directeur":
+        id = Magasinvdsa.objects.get(email_directeur = email_s).id
+        nom = Magasinvdsa.objects.get(email = email_s).nom_directeur
+        prenom = Magasinvdsa.objects.get(email = email_s).prenom_directeur
+    elif statut == "administrateur":
+       id = Admin.objects.get(email = email_s).id
+       nom = Admin.objects.get(email = email_s).nom
+       prenom = Admin.objects.get(email = email_s).prenom
+
+
+
+    return render(request,"Geolocalisation/geolocalisation.html",{
+        "representants" : representants,
+        "magasins": magasins,
+        "familles" : familles,
+        "id": id,
+        "statut": statut,
+        "email_s":email_s,
+        "nom":nom,
+        "prenom":prenom
+    })
+
+
 
 
 
@@ -30,10 +59,8 @@ def geolocalisation(request):
 @csrf_exempt
 def sql_list_sous_fam(request):
 # i faut lever l'exceptin ValueError dans le cas ou la valeur vaut "null" quand il selectionne toutes les famille
-    id_famille = int(request.POST['famille'])
-    print("famille:",id_famille)
+    id_famille = int(request.POST['fid_fam'])
+    print("id famille envoyer par django:",id_famille)
 
-    data = query_view.sql_list_sous_fam(id_famille)
-    print("sous famille:",data)
-    json_data = json.dumps(data)
-    return JsonResponse(json_data, status=200, safe=False)
+    jsonResponse = query_view.sql_list_sous_fam(request)
+    return jsonResponse

@@ -6,19 +6,25 @@
     <meta charset="utf-8">
   	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
-  	<title>géolocalisartion</title>
+  	<title>géolocalisation</title>
 
     <!-- Jquery -->
-    <script type="text/javascript" src="{% static 'Dashboard/js/jquery-3.3.1.min.js'%}"></script>
     <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
 
     <!-- Bootstrap -->
     <link rel="stylesheet" type="text/css" href="{% static 'Dashboard/css/bootstrap.min.css'%}"/>
 
 
+
+    <!--  chargemment des fichiers CSS et Javascript de bootstrap4 qui sont en ligne
+    à cause d'un certain bug dans leurs fichiers je dois les recharger encore -->
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
+
     <!-- JS et CSS de la page -->
   <!--  <script type="text/javascript" src="{% static 'Dashboard/js/graph.js' %}"></script> -->
-    <link rel="stylesheet" type="text/css" href="{% static 'Dashboard/css/dashboar.css' %}">
 
     <link rel="stylesheet" href="{% static 'Geolocalisation/css/geolocalisation.css' %}">
     <script type="text/javascript" src="{% static 'Geolocalisation/js/map.js' %}"></script>
@@ -33,7 +39,8 @@
   <body>
     <!-- NAV BAR-->
     <nav class="navbar navbar-dark fixed-top bg-dark flex-md-nowrap p-0 shadow">
-        <a class="navbar-brand col-sm-3 col-md-2 mr-0" href="#"> VDSA</a>
+        <a class="navbar-brand col-3" href="#"> VDSA</a>
+        <a class="navbar-brand col-7 btn" href="/dashboard/">Tableau de bord</a>
 
       <ul class="navbar-nav px-3">
         <li class="nav-item text-nowrap">
@@ -43,182 +50,131 @@
     </nav>
 <!--FIN DE LA NAV BAR-->
 
-      <!--ccc container pas fermé -->
       <!--CONTENEUR -->
 
     <div class="container-fluid">
-      <!--ccc row pas fermé -->
       <div class="row">
 
-          <!-- SIDE BAR-->
-        <nav class="col-xs-2 d-none d-md-block bg-light sidebar">
-            <br>
-          <div class="sidebar-sticky">
-              <ul class="nav flex-column">
-                  <p>Visible si admin</p>
-                  <FORM>
-                    <SELECT class="representant" size="1">
-                        <OPTION value="null"> Tous les représentant</OPTION>
-                        {% for id,nom, prenom in representants %}
-                          <OPTION value="{{id}}"> {{nom}} {{prenom }}</OPTION>
-                        {% endfor %}
-                    </SELECT>
-                  </FORM>
+              <!-- SIDE BAR-->
+              <nav class="col-xs-2 d-none d-md-block bg-light sidebar">
                   <br>
-                  <FORM id="magasin_form">
-                    <SELECT class="magasin" size="1">
-                        <OPTION value="null"> Tous les magasin</OPTION>
-                        {% for id,nom in magasins %}
-                          <OPTION value="{{id}}"> {{nom}} </OPTION>
-                        {% endfor %}
-                    </SELECT>
-                    </FORM>
-                <br>
-            </ul>
-              <ul class="nav flex-column">
-            <ul class="identifiant">
-                <p>NOM<p>
-                <p>PRENOM<p>
-                 <a href="">DECONNEXION</a>
-                <br>
-            </ul>
-              </ul>
-          </div>
-        </nav>
-          <!--FIN SIDE BAR-->
+                <div class="sidebar-sticky">
+                    <h3>Localisations</h3>
+                    <ul class="nav flex-column">
+                  <ul class="identifiant">
+                      <p>{{nom}}<p>
+                      <p>{{prenom}}<p>
+                       <a href="/connexion/">DECONNEXION</a>
+                      <br>
+                  </ul>
+                    </ul>
+                </div>
+              </nav>
+              <!--FIN SIDE BAR-->
 
-        <main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-4">
-          <div class="chartjs-size-monitor" style="position: absolute; left: 0px; top: 0px; right: 0px; bottom: 0px; overflow: hidden; pointer-events: none; visibility: hidden; z-index: -1;">
-              <div class="chartjs-size-monitor-expand" style="position:absolute;left:0;top:0;right:0;bottom:0;overflow:hidden;pointer-events:none;visibility:hidden;z-index:-1;">
-                  <div style="position:absolute;width:1000000px;height:1000000px;left:0;top:0">
-                  </div>
-              </div>
-              <div class="chartjs-size-monitor-shrink" style="position:absolute;left:0;top:0;right:0;bottom:0;overflow:hidden;pointer-events:none;visibility:hidden;z-index:-1;">
-                  <div style="position:absolute;width:200%;height:200%;left:0; top:0">
-                  </div>
-              </div>
-        </div>
-            <br>
-            <!-- LISTE DEROULANTE STATES-->
+          <main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-4">
 
-<!-- FIN LIST EDEROULANTE STATES-->
 
-    <!-- BOUTONS CHIFFRES AFFAIRES ET MARGES-->
-    <div class="row justify-content-center " >
-      <div class="col-11 col-xl-12  col-lg-12 col-md-12 col-sm-12 "  id="div_creation_compte">
-        <form name="user_form" id="user_form">
+            <div class="mycontainer-fluid" >
+              <div class="row" id="main_form">
+                <div class="col-7 col-md-7">
 
-        	<div class="form-group row">
-              <div class="col-sm-12">
-                <div class="row ">
-                  <div class="btn-group btn-group-toggle" data-toggle="buttons">
-                    <label id="commercial_label" class="btn btn-primary active">
-                      <input type="radio" name="options" id="ca" autocomplete="off" checked=""> Chiffres d'affaire
-                    </label>
-                    <label class="btn btn-primary" id="marge">
-                      <input type="radio" name="options" id="directeur" autocomplete="off"> Marge
-                    </label>
+              <!-- BOUTONS CHIFFRES AFFAIRES ET MARGES-->
+                    <div class="row" >
+                      <section class="col-sm-6 table-responsive">
+                        <table class="table table-bordered table-striped table-condensed">
+                            <FORM id ="chiffre_form">
+                              <div class="btn-group btn-group-toggle" data-toggle="buttons" id="chiffre_toggle">
+                                <label for="ca" class="btn btn-primary active" id="ca_label">
+                                  <input type="radio" name="options" id="ca" autocomplete="off" checked="" onclick="updateMap()"> Chiffres d'affaire
+                                </label>
+                                <label  for="marge" class="btn btn-primary" id="marge_label">
+                                  <input type="radio" name="options" id="marge" autocomplete="off"> Marge
+                                </label>
+                              </div>
+                            </FORM>
+                        </table>
+                      </section>
+                    </div>
+              <!--FIN BOUTOONS CHIFFRES AFFAIRES ET MARGES-->
+
+
+                      <div class="row justify-content-center ">
+                          <section class="col-12 col-sm-12 table-responsive">
+                            <table class="table table-bordered table-striped table-condensed">
+                                <FORM id ="famille_form">
+                                  <SELECT  class="famille" size="1">
+                                      <OPTION value="null" selected="selected" > Toutes les familles </OPTION>
+                                      {% for id,nom in familles %}
+                                        <OPTION value="{{id}}"> {{nom}} </OPTION>
+                                      {% endfor %}
+                                  </SELECT>
+                                </FORM>
+                            </table>
+                          </section>
+
+                          <section class="col-12 col-sm-">
+                            <FORM id ="sous_famille_form">
+                                <SELECT class="sous_famille" size="1">
+                                    <OPTION value="null">  Toutes les sous familles</OPTION>
+                                </SELECT>
+
+                                {% if statut == "administrateur" %}
+                                      <input type="hidden" id="is_admin" value="1" >
+                                  {% else %}
+                                        <input type="hidden" id="is_admin" value="0" >
+                                {% endif %}
+                            </FORM>
+                          </section>
+
+                      </div>
+
+                    </div>
+<!--col-lg-offset-2 col-lg-2 -->
+                        <div class=" col-12 col-md-4 ">
+                          {% if statut == "administrateur" %}
+                          <FORM id="representant_form">
+                            <div class="row justify-content-center">
+                                <div class=" col-12 col-md-12">
+                                  <SELECT class="representant" size="1">
+                                      <OPTION value="null"> Tous les représentant</OPTION>
+                                      {% for id,nom, prenom in representants %}
+                                        <OPTION value="{{id}}"> {{nom}} {{prenom }}</OPTION>
+                                      {% endfor %}
+                                  </SELECT>
+                              </div>
+                            </div>
+                            <div class="row justify-content-center">
+                              <div class=" col-12 col-md-12">
+                                <SELECT class="magasin" size="1">
+                                    <OPTION value="null"> Tous les magasin</OPTION>
+                                    {% for id,nom in magasins %}
+                                      <OPTION value="{{id}}"> {{nom}} </OPTION>
+                                    {% endfor %}
+                                </SELECT>
+                              </div>
+                            </div>
+                          </FORM>
+                          {% endif %}
+                      </div>
+
                   </div>
                 </div>
+
+
+            <div class="mycontainer-fluid" >
+                <div class="row content-center">
+                  <div class="col-11">
+                      <div id="map_canvas"></div>
+                  </div>
               </div>
-          </div>
-        </form>
-      </div>
-    </div>
-    <!--FIN BOUTOONS CHIFFRES AFFAIRES ET MARGES-->
-
-
-            <div class="row justify-content-center ">
-                <section class="col-sm-6 table-responsive">
-                  <table class="table table-bordered table-striped table-condensed">
-                      <FORM id ="famille_form">
-                        <SELECT  class="famille" size="1">
-                            <OPTION value="null" selected="selected" > Toutes les famille </OPTION>
-                            {% for id,nom in familles %}
-                              <OPTION value="{{id}}"> {{nom}} </OPTION>
-                            {% endfor %}
-                        </SELECT>
-                      </FORM>
-                  </table>
-                </section>
-
-                <section class="col-sm-6">
-                  <FORM>
-                      <SELECT class="sous_famille" size="1">
-                          <OPTION>Sous famille (toutes par défauts)</OPTION>
-
-                      </SELECT>
-                  </FORM>
-                </section>
-
             </div>
 
-          <div class="row">
-            <div class="col-11 col-xl-12  col-lg-12 col-md-12 col-sm-12 " >
-
-                <div id="map_canvas">
-                </div>
-            </div>
-          </div>
-
-
+    </main>
 
         </div><!-- fin row -->
       </div><!-- fin container -->
 
-          <!--  chargemment des fichiers CSS et Javascript de bootstrap4 qui sont en ligne
-          à cause d'un certain bug dans leurs fichiers je dois les recharger encore -->
-          <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
-          <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
-          <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
-          <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
-
 
   </body>
 </html>
-
-<!--
-<!DOCTYPE html>
-<html>
-<head>
-	<meta charset="utf-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-
-	<title>Page MAP</title>
-
-  <!-- My CSS --
-	{% load staticfiles %}
-<link rel="stylesheet" href="{% static 'Geolocalisation/css/geolocalisation.css' %}">
-
-	  <!-- Bootstrap CSS --
-
-<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
-
-<!-- chargemment des fichiers CSS et Javascript de bootstrap4 qui sont en ligne --
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
-<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
-<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
-
-
-</head>
-<body>
-
-  <h3> Géolocalisation des chiffes d'affaires : <br /></h3>
-<div class="map_canvas_wrapper"><div id="map_canvas"></div></div>
-
-
-
-
-<!-- My JS --
-	{% load static %}
-<script type="text/javascript" src="{% static 'Geolocalisation/js/map.js' %}"></script>
-<script type="text/javascript" src="{% static 'Geolocalisation/js/getData.js' %}"></script>
-
-  <script async defer
-    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCMMzGPd854s5LS7-N9OvEOUSfUwwyX180&callback=initMap">
-    </script>
-
-</body>
-</html>
--->

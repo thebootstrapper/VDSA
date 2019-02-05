@@ -1,0 +1,95 @@
+/* définition de la police du site : */
+@font-face {
+	font-family: 'Asap';
+  font-weight: normal;
+	src: url('fonts/regular/asap_regular.otf') format('otf'),
+	     url('fonts/regular/asap_regular.eot') format('eot'),
+	     url('fonts/regular/asap_regular.svg') format('svg'),
+	     url('fonts/regular/asap_regular.ttf') format('truetype'),
+	     url('fonts/regular/asap_regular.woff') format('woff'),
+	     url('fonts/regular/asap_regular.woff2') format('woff2');
+}
+
+@font-face {
+	font-family: 'Asap';
+  font-weight: bold;
+	src: url('fonts/medium/asap_medium.otf') format('otf'),
+	     url('fonts/medium/asap_medium.eot') format('eot'),
+	     url('fonts/medium/asap_medium.svg') format('svg'),
+	     url('fonts/medium/asap_medium.ttf') format('truetype'),
+	     url('fonts/medium/asap_medium.woff') format('woff'),
+	     url('fonts/medium/asap_medium.woff2') format('woff2');
+}
+
+@font-face {
+	font-family: 'Asap';
+  font-style: italic;
+	src: url('fonts/italic/asap_italic.otf') format('otf'),
+	     url('fonts/italic/asap_italic.eot') format('eot'),
+	     url('fonts/italic/asap_italic.svg') format('svg'),
+	     url('fonts/italic/asap_italic.ttf') format('truetype'),
+	     url('fonts/italic/asap_italic.woff') format('woff'),
+	     url('fonts/italic/asap_italic.woff2') format('woff2');
+}
+
+body {
+  font-family: 'Asap', cursive;
+}
+
+#fail {
+	color: red;
+}
+
+#success {
+	color: green;
+}
+
+#ins_form {
+	padding-top: 15px;
+}
+
+#con_form {
+	padding-top: 15px;
+}
+
+#lien_bas {
+  font-size: 20pt;
+	font-weight: bold;
+  display: table;
+	margin: auto;
+	margin-top: 5px;
+	margin-bottom: 50px;
+	padding: 10px;
+	background-color: white;
+	border: solid black 2px;
+}
+
+#cont_con {
+  margin: auto;
+  width: 350px;
+  border: 2px solid black;
+  padding: 10px;
+}
+
+a {
+	color: black;
+	text-decoration: none;
+}
+
+a:hover {
+	text-decoration: none;
+	color: gray;
+}
+
+h1, h2 {
+  text-align: center;
+  font-size: 20pt;
+}
+
+#page_connexoin{
+	margin-bottom:30px;
+}
+
+#myrownavbar{
+	padding-bottom:50px;
+}

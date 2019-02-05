@@ -11,7 +11,7 @@ from decimal import Decimal
 # Variation entre 2 décimales en pourcent
 def variation(x, y):
     if x:
-        return (y / x * 100 - 100)
+        return ((y - x) / abs(x) * 100)
     elif y:
         return None
     else:
@@ -62,22 +62,21 @@ def getDateMax():
 def calcMarge(table):
     if (not table):
         return None
-    sumI, sumII = 0, 0
+    sumP, sum = 0, 0
     len_table = len(table)
     for i in range(0, len_table):
         montant = table[i][0]
         marge = table[i][1]
-        sumI += montant + montant * marge / 100
-        sumII += montant
+        sum += montant - (abs(montant) * marge) / 100
+        sumP += montant
 
-    if (sumI == 0 and sumII == 0):
+    if (sumP == 0 and sum == 0):
         return 0
-    elif (sumII == 0):
+    elif (sumP == 0):
         return None
     else:
-        marge = (sumI - sumII) / sumII * 100
+        marge = (sumP - sum) / abs(sumP) * 100
         return marge
-
 
 
 
@@ -250,10 +249,11 @@ def sql_caTableOfYear(year, date_max, filter):
 
 # Commencer une requete SQL 'query' pour récupérer le nombre de clients
 def sql_nbClt():
-    query = (
-        'SELECT COUNT(*) FROM Client clt, Facture f, Commercial com '+
-        'WHERE clt.idMagasinVDSA = f.idMagasinVDSA AND f.idClient = clt.id AND f.idMagasinVDSA = clt.idMagasinVDSA AND f.idCommercial = com.id'
-    )
+    query = [
+        'SELECT Count(*) FROM Client WHERE id IN (SELECT f.idClient FROM Facture f WHERE TRUE',
+        ') AND idMagasinVDSA IN (SELECT f.idMagasinVDSA FROM Facture f WHERE TRUE',
+        ')'
+    ]
     return query
 
 
@@ -265,9 +265,11 @@ def sql_nbClt():
 # ---> entier, nombre de clients dont la date d'inscription est antérieur à une année (mois et jour de date_max)
 def sql_nbCltOfYear(year, date_max, filter):
     query = sql_nbClt()
-    query += ' AND clt.date_inscription <= %s'
-    params = [dtDate(year+1, date_max.month, date_max.day)]
-    (query, params)=sql_addFilter(filter, query, params)
+    (query[0], params)=sql_addFilter(filter, query[0], [])
+    (query[1], params)=sql_addFilter(filter, query[1], params)
+    query[2] += ' AND date_inscription <= %s'
+    query = ''.join(query)
+    params += [dtDate(year+1, date_max.month, date_max.day)]
     return sql_execQuery(query, params, False)[0]
 
 
@@ -280,9 +282,11 @@ def sql_nbCltOfYear(year, date_max, filter):
 def sql_nbNewCltOfYear(year, date_max, filter):
     (month, day) = (date_max.month, date_max.day)
     query = sql_nbClt()
-    query += ' AND clt.date_inscription >= %s AND clt.date_inscription <= %s'
-    params = [dtDate(year, month, day), dtDate(year+1, month, day)]
-    (query, params)=sql_addFilter(filter, query, params)
+    (query[0], params)=sql_addFilter(filter, query[0], [])
+    (query[1], params)=sql_addFilter(filter, query[1], params)
+    query += ' AND date_inscription >= %s AND date_inscription <= %s'
+    query = ''.join(query)
+    params += [dtDate(year, month, day), dtDate(year+1, month, day)]
     return sql_execQuery(query, params, False)[0]
 
 

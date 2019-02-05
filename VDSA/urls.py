@@ -20,17 +20,25 @@ from django.conf import settings
 
 from . import views
 
+
+#pour l'importation de fichier
+from django.conf.urls.static import static
+
+
 urlpatterns = [
-    #/CompteUtilisateur/
-    url(r'^CompteUtilisateur/',include('CompteUtilisateur.urls')),
-    #/Geolocalisation/
-    url(r'^Geolocalisation/',include('Geolocalisation.urls')),
-    #/Dashboard/
+    #/geoloc/
+    url(r'^geoloc/',include('Geolocalisation.urls')),
+    #/dashboard/
     url(r'^dashboard/',include('Dashboard.urls')),
-    # racine
-    url(r'^$',views.index),
+    #/Dashboard/
+    url(r'^con_ins/',include('con_ins.urls')),
+
+    url(r'^backoffice/',include('Backoffice.urls')),
 
     url(r'^admin',admin.site.urls),
+
+    #racine
+    url(r'^',include('con_ins.urls')),
 ]
 
 if settings.DEBUG:
@@ -42,3 +50,7 @@ if settings.DEBUG:
         # url(r'^__debug__/', include(debug_toolbar.urls)),
 
     ] + urlpatterns
+
+    #pour l'importation de fichier
+    urlpatterns += static(settings.STATIC_URL, document_rool=settings.STATIC_ROOT)
+    urlpatterns += static(settings.STATIC_URL, document_rool=settings.MEDIA_ROOT)

@@ -1,6 +1,8 @@
+from __future__ import absolute_import
 from django.shortcuts import render
 from django.http import HttpResponse, JsonResponse
 from django.views.decorators.csrf import csrf_exempt
+from Backoffice.models import Session_utilisateur, Commercial, Magasinvdsa, Admin
 
 import re
 import json
@@ -32,44 +34,15 @@ def varJavaToPython(x):
 
 
 
-""" recherche le/les id client(s) similaire(s) à 'id_input' """
-# 'request': requete ajax contenant:
-#    'id_input': chaine, la recherche de l'id client entrée par l'utilisateur
-# ---> liste de chaines, les id similaires
-@csrf_exempt
-def sql_clt_search(request):
-    message = request.POST.getlist('id_input[]')
-    print('message',message)
-    return HttpResponse(message[1])
-
-
-    match = re.search('^([a-zA-Z])?(\d+)?$', id_input)
-    if (not match or match.group(0) == ''):
-        return []
-    m_char = match.group(1)
-    if m_char:
-        m_char = m_char.upper()
-    m_int = match.group(2)
-    if m_int:
-        m_int = "%%" + m_int + "%%"
-
-    if (m_char != None and m_int != None):
-        query = 'SELECT idMagasinVDSA, id FROM Client WHERE idMagasinVDSA = %s AND id LIKE %s'
-        params = [m_char, m_int]
-    elif (m_int != None):
-        query = 'SELECT idMagasinVDSA, id FROM Client WHERE id LIKE %s'
-        params = [m_int]
-    else:
-        query = 'SELECT idMagasinVDSA, id FROM Client WHERE idMagasinVDSA = %s'
-        params = [m_char]
-
-    table = quer.sql_execQuery(query, params, True)
-
+# ---> n-uplet de chaines, la liste de tous les id clients
+def sql_list_clt():
+    query = 'SELECT idMagasinVDSA, id FROM Client'
+    table = quer.sql_execQuery(query, [], True)
     len_table = len(table)
     list = [None] * len_table
     for i in range(0,len_table):
         list[i] = table[i][0] + str(table[i][1])
-    return list;
+    return list
 
 
 
@@ -89,10 +62,15 @@ def sql_list_fam():
 
 
 # ---> n-uplet de couple, l'id et le nom des sous-familles en fonction de l'id famille 'id_fam' dans la requete ajax GET 'request'
-def sql_list_sous_fam(id_fam):
+@csrf_exempt
+def sql_list_sous_fam(request):
+    id_fam = varJavaToPython(request.POST['id_fam'])
     query='SELECT id, nom FROM SousFamille WHERE idFamille = %s ORDER BY nom'
     params = [id_fam]
-    return quer.sql_execQuery(query, params, True)
+    data = quer.sql_execQuery(query, params, True)
+
+    json_data = json.dumps(data)
+    return JsonResponse(json_data, status=200, safe=False)
 
 
 
@@ -160,7 +138,7 @@ def sql_get_table_data(request):
         "graph_dates":graph_dates,
         "graph_data":graph_data,
         "nb_clt": [nb_clt_var, nb_clt_before, nb_clt],
-        "nb_newclt": [ca_year_var, ca_year_before, ca_year],
+        "nb_newclt": [nb_newclt_var, nb_newclt_before, nb_newclt],
         "ca_year": [ca_year_var, ca_year_before, ca_year],
         "marge_year": [marge_year_var, marge_year_before, marge_year]
     })
@@ -233,10 +211,6 @@ def sql_get_geoloc_data(request):
     filter = [varJavaToPython(elt) for elt in filter]
     bool_ca = bool(request.POST['bool_ca'])
 
-    print('\nsql_get_geoloc_data')
-    print('filter:',filter)
-    print('bool_ca:',bool_ca, '\n')
-
     date_max = quer.getDateMax()
     year_max = date_max.year
     if bool_ca:
@@ -261,7 +235,42 @@ def sql_get_geoloc_data(request):
 
 # affiche la page HTML du tableau de bord
 def dashboard(request):
+    l_id_clt = sql_list_clt()
+    representants=sql_list_com()
+    magasins= sql_list_mag()
+    familles  = sql_list_fam()
 
 
 
-    return render(request,"dashboard/dashboard.html")
+    email_s = Session_utilisateur.objects.all().last().email_s
+    statut = Session_utilisateur.objects.all().last().statut_s
+
+    if statut == "commercial":
+        id = Commercial.objects.get(email = email_s).id
+        nom = Commercial.objects.get(email = email_s).nom
+        prenom = Commercial.objects.get(email = email_s).prenom
+    elif statut == "directeur":
+        id = Magasinvdsa.objects.get(email_directeur = email_s).id
+        nom = Magasinvdsa.objects.get(email = email_s).nom_directeur
+        prenom = Magasinvdsa.objects.get(email = email_s).prenom_directeur
+    elif statut == "administrateur":
+       id = Admin.objects.get(email = email_s).id
+       nom = Admin.objects.get(email = email_s).nom
+       prenom = Admin.objects.get(email = email_s).prenom
+
+
+    print('nom:',nom,'prenom:',prenom)
+    print('statut:',statut)
+
+
+    return render(request,"dashboard/dashboard.html",{
+        "l_id_clt": l_id_clt,
+        "representants" : representants,
+        "magasins": magasins,
+        "familles" : familles,
+        "id": id,
+        "statut": statut,
+        "email_s":email_s,
+        "nom":nom,
+        "prenom":prenom
+    })
