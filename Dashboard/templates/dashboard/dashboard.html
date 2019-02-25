@@ -1,0 +1,233 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="fr" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <title>Tableau de bord</title>
+
+    <!-- Jquery -->
+    <script type="text/javascript" src="{% static 'Dashboard/js/jquery-3.3.1.min.js'%}"></script>
+
+    <!-- Bootstrap -->
+    <link rel="stylesheet" type="text/css" href="{% static 'Dashboard/css/bootstrap.min.css'%}"/>
+
+    <!-- JS et CSS de la page -->
+    <link rel="stylesheet" type="text/css" href="{% static 'Dashboard/css/dashboard.css' %}">
+
+
+
+  </head>
+
+
+  <body>
+    <!-- NAV BAR-->
+    <nav class="navbar navbar-dark fixed-top bg-dark flex-md-nowrap p-0 shadow">
+        <a class="navbar-brand col-3" href="#"> VDSA</a>
+        <a class="navbar-brand col-7 btn" href="/geoloc/">Carte</a>
+      <ul class="navbar-nav px-3">
+
+      </ul>
+    </nav>
+  <!--FIN DE LA NAV BAR-->
+
+      <!--CONTENEUR -->
+
+    <div class="container-fluid">
+      <div class="row">
+
+          <!-- SIDE BAR-->
+        <nav class="col-xs-2 d-none d-md-block bg-light sidebar">
+            <br>
+          <div class="sidebar-sticky">
+              <h2>Statistiques</h2>
+              <ul class="nav flex-column">
+            <ul class="identifiant">
+                <p>{{nom}} {{prenom}}<p>
+                 <a href="/con_ins/connexion/">DECONNEXION</a>
+                <br>
+            </ul>
+              </ul>
+          </div>
+        </nav>
+          <!--FIN SIDE BAR-->
+
+        <main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-4"><div class="chartjs-size-monitor" style="position: absolute; left: 0px; top: 0px; right: 0px; bottom: 0px; overflow: hidden; pointer-events: none; visibility: hidden; z-index: -1;"><div class="chartjs-size-monitor-expand" style="position:absolute;left:0;top:0;right:0;bottom:0;overflow:hidden;pointer-events:none;visibility:hidden;z-index:-1;"><div style="position:absolute;width:1000000px;height:1000000px;left:0;top:0"></div></div><div class="chartjs-size-monitor-shrink" style="position:absolute;left:0;top:0;right:0;bottom:0;overflow:hidden;pointer-events:none;visibility:hidden;z-index:-1;"><div style="position:absolute;width:200%;height:200%;left:0; top:0"></div></div></div>
+            <br>
+            <div class="row">
+                            <div class="col-lg-10">
+                            <section class="col-sm-7 table-responsive" >
+                                <h2>Tableau de bord</h2>
+                            </section>
+                      </div>
+
+                        <div class="col-lg-offset-2 col-lg-2">
+                            <ul class="nav flex-column">
+                    {% if statut == "administrateur" %}
+                    <SELECT id="sel_com" class="representant" size="1">
+                      <OPTION value=""> Tous les représentants</OPTION>
+                      {% for id,nom, prenom in representants %}
+                        <OPTION value="{{id}}"> {{nom}} {{prenom }}</OPTION>
+                      {% endfor %}
+                    </SELECT>
+
+                    <SELECT id="sel_mag" class="magasin" size="1">
+                      <OPTION value=""> Tous les magasins</OPTION>
+                      {% for id,nom in magasins %}
+                        <OPTION value="{{id}}"> {{nom}} </OPTION>
+                      {% endfor %}
+                    </SELECT>
+                    {% endif %}
+                <br>
+            </ul>
+                        </div>
+
+                        </div>
+            <br>
+            <!-- LISTE DEROULANTE STATES-->
+          <div class="row">
+                <section class="col-sm-6 table-responsive">
+
+
+                <SELECT class="categorie" size="1">
+                    <OPTION>States global clients</OPTION>
+                </SELECT>
+
+                </section>
+
+            </div>
+    <br>
+  <!-- FIN LIST EDEROULANTE STATES-->
+
+  <div>
+    <!-- <button type="button" class="btn button1 btn-default">Chiffre d'affaire</button>
+          <button type="button" class="btn button2 btn-default">Marge</button>  BOUTONS CHIFFRES AFFAIRES ET MARGES-->
+  <div class="row">
+                <section class="col-sm-6 table-responsive">
+
+               <button value="True" type="button" class="btn button-ca btn-default">Chiffre d'affaire</button>
+                <button value="" type="button" class="btn button-ca btn-default">Marge</button>
+                </section>
+
+            </div>
+            </div>
+    <!--FIN BOUTOONS CHIFFRES AFFAIRES ET MARGES-->
+
+            <br>
+        <!--BARRE DE RECHERCHE-->
+            <div class="row">
+                <div class="col-sm-3 table-responsive">
+                    <div class="form-group">
+                        <input type="text"id="input_id_clt" class="form-control" placeholder="N°compte client" list="datalist_id_clt">
+                        <datalist id="datalist_id_clt">
+                          {% for id_clt in l_id_clt %}
+                              <option value="{{id_clt}}">
+                          {% endfor %}
+                        </datalist>
+                    </div>
+                </div>
+                <div class="col-xs-2 tables-responsive">
+                     <button id="btn_submit_id_clt" type="submit" class="form-control">Rechercher</button>
+                </div>
+            </div>
+            <div id="search_row" class="row">
+              <div  class="col-xs-2 tables-responsive div-id-clt">
+                <span id="active_id_clt" class="active-id-clt"></span>
+                <a id="a_close_id_clt" href="#" class="close btn btn-default" >✖</a>
+              </div>
+            </div>
+        <br>
+        <!-- Fin BARRE DE RECHERCHE-->
+            <div class="row">
+                <section class="col-sm-6 table-responsive">
+
+
+                <SELECT id="sel_fam" class="famille" size="1">
+                  <OPTION value="" selected="selected" > Toutes les familles </OPTION>
+                  {% for id,nom in familles %}
+                    <OPTION value="{{id}}"> {{nom}} </OPTION>
+                  {% endfor %}
+                </SELECT>
+
+                </section>
+        <section class="col-sm-6">
+
+                <SELECT id="sel_sfam" class="sous_famille" size="1">
+                    <OPTION value="">Sous famille (toutes par défauts)</OPTION>
+                </SELECT>
+
+        </section>
+            </div>
+           <br>
+
+            <div class="row">
+                  <div class="col-lg-10">
+                  <section class="col-sm-7 table-responsive">
+                  </section>
+            </div>
+
+
+              </div>
+          <canvas class="my-4 w-100 chartjs-render-monitor" id="myChart" width="643" height="271" style="display: block; height: 217px; width: 515px;"></canvas>
+
+
+          <h2>Chiffres clés annuels</h2>
+           <div class="table-responsive">
+               <table class="table table-striped table-sm">
+                   <thead>
+                     <tr><th id="nb_clt">Clients
+                       <p><span class="nb_var"></span>%</p>
+                       <p><span class="nb_fix"></span> / <span class="nb_fix"></span></p>
+                    </th><th id="nb_newclt">Nouveau clients
+                      <p><span class="nb_var"></span>%</p>
+                       <p><span class="nb_fix"></span> / <span class="nb_fix"></span></p>
+                    </th><th id="ca_year">Chiffre
+                      <p><span class="nb_var"></span>%</p>
+                       <p><span class="nb_fix"></span> / <span class="nb_fix"></span></p>
+                    </th><th id="marge_year">Marge
+                      <p><span class="nb_var"></span>%</p>
+                       <p><span class="nb_fix"></span> / <span class="nb_fix"></span></p>
+                   </thead></table></div>
+            <br>
+             <h2>Chiffres clés mensuels</h2>
+           <div class="table-responsive">
+               <table class="table table-striped table-sm">
+                 <tbody><tr>
+                  <td>Chiffre par client
+                    <p><span class="nb_var"></span>%</p>
+                    <p><span class="nb_fix">/<span class="nb_fix"></p>
+                  </td>
+                  <td>Marge
+                    <p><span class="nb_var"></span>%</p>
+                    <p><span class="nb_fix">/<span class="nb_fix"></p>
+                  </td></tr>
+                </tbody>
+              </table>
+          </div>
+        </main>
+      </div>
+  </div>
+
+
+  <!-- Chart -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.1/Chart.min.js"></script>
+
+
+
+  {% if statut == "commercial" %}
+  <script type="text/javascript">
+    var session_id_com = {{id}}
+  </script>
+  {% endif %}
+
+  {% if statut == "directeur" %}
+  <script type="text/javascript">
+    var session_id_mag = {{id}}
+  </script>
+  {% endif %}
+
+
+    <!-- Local Files -->
+  <script type="text/javascript" src="{% static 'Dashboard/js/graph.js' %}"></script>
+
+</body>
+</html>
