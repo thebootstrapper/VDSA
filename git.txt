@@ -1,0 +1,4 @@
+#import a local repository to git
+# Pushes the mirror to the new GitHub repository
+ cd repo.git
+ git push --mirror https://github.com/ghuser/repo.git
